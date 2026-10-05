@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "ドパガキ専用プレイヤー最終版",
+  "version": "2.1",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
