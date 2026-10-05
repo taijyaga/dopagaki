@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Not Found - ドパガキ専用プレイヤー</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      background: #111111;
+      padding: 50px 40px;
+      border-radius: 16px;
+      border: 2px solid #555555;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      max-width: 450px;
+      width: 90%;
+      position: relative;
+    }
+    .error-code {
+      font-size: 80px;
+      font-weight: 900;
+      color: #333333;
+      margin: 0;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    h1 {
+      font-size: 22px;
+      color: #ff0055;
+      margin: 10px 0;
+    }
+    p {
+      color: #aaaaaa;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+    .countdown {
+      font-weight: bold;
+      color: #ff0055;
+      font-size: 16px;
+    }
+    .home-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: #888888;
+      text-decoration: none;
+      font-size: 13px;
+      border-bottom: 1px solid #444444;
+      transition: all 0.2s ease;
+    }
+    .home-link:hover {
+      color: #ff0055;
+      border-color: #ff0055;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="error-code">404</div>
+  <h1>お探しのページは見つかりません</h1>
+  <p>URLが間違っているか、ページが移動した可能性があります。</p>
+  
+  <p class="countdown"><span id="timer">3</span> 秒後にトップページへ自動で戻ります...</p>
+  
+  <a href="./" class="home-link">今すぐ手動で戻る</a>
+</div>
+
+<script>
+  // 3秒カウントダウンして自動リダイレクトする処理
+  let timeLeft = 3;
+  const timerElement = document.getElementById('timer');
+
+  const countdown = setInterval(() => {
+    timeLeft--;
+    timerElement.innerText = timeLeft;
+    
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      // カレントディレクトリ（トップページ）へリダイレクト
+      window.location.href = './';
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>
