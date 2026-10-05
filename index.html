@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ドパガキ専用プレイヤー最終版 - ダウンロード</title>
+  
+  <!-- ZIP作成に必要な超定番ライブラリ「JSZip」を読み込み -->
+  <script src="https://cloudflare.com"></script>
+
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      text-align: center;
+      background: #111111;
+      padding: 40px;
+      border-radius: 16px;
+      border: 2px solid #ff0055;
+      box-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
+      max-width: 450px;
+      width: 90%;
+    }
+    h1 {
+      font-size: 28px;
+      color: #ff0055;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    p {
+      color: #aaaaaa;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .download-btn {
+      display: inline-block;
+      background: #ff0055;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+      transition: all 0.3s ease;
+    }
+    .download-btn:hover {
+      background: #ff3377;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 85, 0.6);
+    }
+    .download-btn:active {
+      transform: translateY(1px);
+    }
+    .info-box {
+      margin-top: 30px;
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #888888;
+      text-align: left;
+    }
+    .info-box ol {
+      margin: 5px 0 0 20px;
+      padding: 0;
+    }
+    .info-box li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>⚡ DOPAGAKI PLAYER ⚡</h1>
+  <p>YouTubeの通常動画＆ショート動画を自由な倍速でハックし、広告を自動で爆速処理する最強タイパツールの最終版です。</p>
+  
+  <!-- ダウンロードボタン -->
+  <button class="download-btn" id="dl-button">拡張機能をダウンロード (ZIP)</button>
+
+  <div class="info-box">
+    <strong>使い方：</strong>
+    <ol>
+      <li>ダウンロードしたZIPファイルを解凍してフォルダにします。</li>
+      <li>Chromeで <code>chrome://extensions/</code> を開きます。</li>
+      <li>右上の「デベロッパー モード」をONにします。</li>
+      <li>左上の「パッケージ化されていない拡張機能を読み込む」から解凍したフォルダを選択します。</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+document.getElementById('dl-button').addEventListener('click', async () => {
+  const zip = new JSZip();
+
+  // 1. manifest.json の中身をここに定義
+  const manifestContent = `{
+  "manifest_version": 3,
+  "name": "ドパガキ専用プレイヤー最終版",
+  "version": "2.1",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}`;
+
+  // 2. content.js の中身をここに定義
+  const contentJsContent = `function injectDopaInputForAll() {
+  if (document.getElementById('dopa-container')) return;
+
+  let targetArea = null;
+
+  if (window.location.href.includes('/shorts/')) {
+    targetArea = document.querySelector('#actions.ytd-reel-player-overlay-renderer, #actions-inner, #right-metadata-container');
+    if (!targetArea) { targetArea = document.body; }
+  } else {
+    targetArea = document.querySelector('#above-the-fold');
+  }
+
+  if (!targetArea) return;
+
+  const container = document.createElement('div');
+  container.id = 'dopa-container';
+  
+  if (window.location.href.includes('/shorts/')) {
+    container.style.cssText = 'display: flex; flex-direction: column; gap: 6px; padding: 8px; background: rgba(17, 17, 17, 0.95); border-radius: 8px; border: 2px solid #ff0055; align-items: center; position: fixed; right: 20px; top: 20%; z-index: 99999; box-shadow: 0 0 10px rgba(255,0,85,0.5);';
+  } else {
+    container.style.cssText = 'display: flex; gap: 10px; margin: 10px 0; padding: 10px; background: #111; border-radius: 8px; border: 1px solid #ff0055; align-items: center; width: fit-content;';
+  }
+
+  const label = document.createElement('span');
+  label.innerText = window.location.href.includes('/shorts/') ? '⚡' : '⚡ ドパ速度:';
+  label.style.cssText = 'color: #ff0055; font-weight: bold; font-size: 13px;';
+  container.appendChild(label);
+
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.value = '1.0';  
+  input.step = '0.1';  
+  input.min = '0.1';   
+  input.max = '16.0';  
+  input.style.cssText = 'width: 50px; padding: 4px; background: #222; color: #fff; border: 1px solid #444; border-radius: 4px; text-align: center; font-weight: bold; font-size: 12px;';
+  container.appendChild(input);
+
+  const btn = document.createElement('button');
+  btn.innerText = 'GO';
+  btn.style.cssText = 'padding: 4px 10px; background: #ff0055; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;';
+  
+  btn.onclick = () => {
+    const speedValue = parseFloat(input.value);
+    if (!isNaN(speedValue)) {
+      const videos = document.querySelectorAll('video');
+      videos.forEach(video => {
+        video.playbackRate = speedValue;
+      });
+    }
+  };
+  container.appendChild(btn);
+
+  if (window.location.href.includes('/shorts/') && container.style.position === 'fixed') {
+    document.body.appendChild(container);
+  } else {
+    targetArea.insertBefore(container, targetArea.firstChild);
+  }
+}
+
+function checkUrlChange() {
+  const container = document.getElementById('dopa-container');
+  if (container) {
+    const isShortsUrl = window.location.href.includes('/shorts/');
+    const isShortsContainer = container.style.position === 'fixed';
+    if (isShortsUrl !== isShortsContainer) {
+      container.remove();
+    }
+  }
+}
+
+function hackAds() {
+  const video = document.querySelector('video');
+  const moviePlayer = document.querySelector('.html5-video-player');
+  if (moviePlayer && moviePlayer.classList.contains('ad-showing')) {
+    if (video) {
+      video.playbackRate = 16; 
+      video.muted = true;      
+    }
+    const skipButton = document.querySelector('.ytp-skip-ad-button, .ytp-ad-skip-button-mod');
+    if (skipButton) { skipButton.click(); }
+  }
+}
+
+setInterval(() => {
+  checkUrlChange();
+  injectDopaInputForAll();
+  hackAds();
+}, 1000);`;
+
+  // ZIPファイルの中にそれぞれのファイルを追加
+  zip.file("manifest.json", manifestContent);
+  zip.file("content.js", contentJsContent);
+
+  // ZIPを生成して自動ダウンロードさせる処理
+  zip.generateAsync({type:"blob"}).then(function(content) {
+    const element = document.createElement('a');
+    element.href = URL.createObjectURL(content);
+    element.download = "dopagaki-player.zip"; // ダウンロードされるZIPファイルの名前
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  });
+});
+</script>
+
+</body>
+</html>
